@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+
+:root {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #1f2937;
+}
+
+.mantine-Text-root,
+.mantine-TextInput-input,
+.mantine-TextInput-label,
+.mantine-PasswordInput-label,
+.mantine-Textarea-root,
+.mantine-Textarea-input,
+.mantine-Textarea-label,
+.mantine-PasswordInput-innerInput,
+.mantine-Alert-message,
+.mantine-Title-root,
+.mantine-Modal-title,
+.mantine-Button-root,
+.mantine-AppShell-header,
+.mantine-Notification-title,
+.mantine-Menu-itemLabel,
+.mantine-Notification-description,
+.mantine-NavLink-label {
+  font-family: "Space Grotesk", sans-serif !important;
+}
