@@ -26,8 +26,8 @@ func getLimiter(ip string) *rate.Limiter {
 
 	v, exists := clients[ip]
 	if !exists {
-		limit := rate.Every(1 * time.Minute / 5)
-		limiter := rate.NewLimiter(limit, 5)
+		limit := rate.Every(1 * time.Minute)
+		limiter := rate.NewLimiter(limit, 1)
 
 		clients[ip] = &Client{limiter: limiter, lastSeen: time.Now()}
 		return limiter
@@ -57,7 +57,7 @@ func LimitMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
 
 		if !getLimiter(ip).Allow() {
-			utils.WriteJSON(w, http.StatusTooManyRequests, utils.Envelope{"error": "Too many request"})
+			utils.WriteJSON(w, http.StatusTooManyRequests, utils.Envelope{"message": "Too many requests"})
 			return
 		}
 		next.ServeHTTP(w, r)

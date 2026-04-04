@@ -165,14 +165,16 @@ func (eh *EventHandler) HandleCreateAIEvents(w http.ResponseWriter, r *http.Requ
 	}
 
 	res, err := eh.eventStore.GetMaxPositionByTimelineId(r.Context(), timelineID)
-
 	if err != nil {
 		eh.logger.Printf("Failed to get max position: %v", err)
 		utils.WriteJSON(w, http.StatusInternalServerError, utils.Envelope{"message": "Failed to determine event position"})
 		return
 	}
 
-	maxPos := int(res.(int32))
+	maxPos := 0
+	if res != nil {
+		maxPos = int(res.(int32))
+	}
 
 	var createParams []db.BulkCreateEventsParams
 	for _, event := range events {
@@ -293,7 +295,7 @@ Please output the NEW full list of events based on these changes.
 
 	if len(newEvents) > 0 {
 		var createParams []db.BulkCreateEventsParams
-		for _, event := range newEvents {
+		for i, event := range newEvents {
 			mediaName, mediaType, mediaUrl := extractMediaFields(event.Media)
 
 			createParams = append(createParams, db.BulkCreateEventsParams{
@@ -305,6 +307,10 @@ Please output the NEW full list of events based on these changes.
 				MediaName:        mediaName,
 				MediaType:        mediaType,
 				MediaUrl:         mediaUrl,
+				Position: pgtype.Int4{
+					Int32: int32(i + 1),
+					Valid: true,
+				},
 			})
 		}
 
